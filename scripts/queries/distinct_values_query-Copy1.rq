@@ -1,0 +1,31 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT
+?subject1
+?wdt_prop 
+?object
+?constraint_statement
+WHERE
+{
+  ?property wikibase:directClaim ?wdt_prop.
+  ?property p:P2302 ?constraint_statement.
+  ?constraint_statement ps:P2302 wd:Q21502410. ## distinct-values constraint
+  
+  ?subject1 ?wdt_prop ?object.
+  ?subject2 ?wdt_prop ?object2.
+  FILTER (STR(?object) = STR(?object2))
+  
+  FILTER (?subject1 != ?subject2)
+  # exception and deprecation
+  FILTER NOT EXISTS {?constraint_statement pq:P2241 []}
+  FILTER NOT EXISTS {?constraint_statement wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?constraint_statement pq:P2303 ?subject1} 
+  FILTER NOT EXISTS {?constraint_statement pq:P2303 ?subject2} 
+}

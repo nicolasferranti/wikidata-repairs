@@ -1,0 +1,31 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT
+    ?subject
+    ?property
+WHERE
+{
+    ?subject ?wdt_property [].
+
+    ?property wikibase:directClaim ?wdt_property.
+    ?property p:P2302 ?statement.
+    ?statement ps:P2302 wd:Q21503250. ## type constraint
+    ?statement pq:P2309 wd:Q21503252.
+
+    # no deprecated, no exceptions
+    FILTER NOT EXISTS {?statement pq:P2241 []}
+    FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
+    FILTER NOT EXISTS {?statement pq:P2303 ?subject}
+    
+    FILTER NOT EXISTS {
+    ?statement pq:P2308 ?allowed_type.
+    ?subject wdt:P279* ?allowed_type.
+    }
+}

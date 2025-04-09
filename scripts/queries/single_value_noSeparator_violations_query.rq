@@ -1,0 +1,31 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+## Single value including separator, replace {PID} with the desired property id
+SELECT
+  ?subject
+  ?property
+  ?wds1
+{
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q19474404. # single-value constraint
+  # it must NOT have a separator
+  FILTER NOT EXISTS {?statement pq:P4155 []}
+  
+  ?property wikibase:claim ?p_pid.
+  ?subject ?p_pid ?wds1,?wds2.
+  
+  FILTER(str(?wds1) != str(?wds2))
+  
+  # exception and deprecation
+  FILTER NOT EXISTS {?statement pq:P2241 []}
+  FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?statement pq:P2303 ?subject}
+  
+}

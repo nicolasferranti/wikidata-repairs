@@ -1,0 +1,30 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT
+?subject
+?property
+?object
+(?wdt_inverse as ?requested_property)
+WHERE
+{
+  ?property wikibase:directClaim ?wdt_prop.
+  
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21510855. ## inverse constraint
+  ?statement pq:P2306/wikibase:directClaim ?wdt_inverse.
+  
+  ?subject ?wdt_prop ?object.
+  
+  FILTER NOT EXISTS {?object ?wdt_inverse ?subject}
+  FILTER NOT EXISTS {?statement pq:P2303 ?subject}
+  FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?statement pq:P2241 []}
+
+}

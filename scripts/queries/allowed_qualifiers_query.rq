@@ -1,0 +1,30 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT
+  ?subject
+  ?wd_property
+  ?instance_statement
+  (?pq_qualifier as ?not_allowed_qualifier)
+WHERE
+{
+  ?statement ps:P2302 wd:Q21510851. ## allowed qualifiers constraint
+  ?wd_property p:P2302 ?statement.
+  ?wd_property wikibase:claim ?p_property.
+  
+  ?subject ?p_property ?instance_statement.
+  ?instance_statement ?pq_qualifier [].
+  ?wd_qualifier wikibase:qualifier ?pq_qualifier.
+  FILTER NOT EXISTS {?statement pq:P2306 ?wd_qualifier}
+   
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  #FILTER (?p_property = p:P210)
+}
