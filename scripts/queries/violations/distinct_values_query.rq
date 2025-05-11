@@ -11,21 +11,20 @@ SELECT
 ?subject1
 ?wdt_prop 
 ?object
-?constraint_statement
 WHERE
 {
   ?property wikibase:directClaim ?wdt_prop.
-  ?property p:P2302 ?constraint_statement.
-  ?constraint_statement ps:P2302 wd:Q21502410. ## distinct-values constraint
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21502410. ## distinct-values constraint
   
   ?subject1 ?wdt_prop ?object.
-  ?subject2 ?wdt_prop ?object2.
-  FILTER (STR(?object) = STR(?object2))
+  ?subject2 ?wdt_prop ?object.
   
   FILTER (?subject1 != ?subject2)
   # exception and deprecation
-  FILTER NOT EXISTS {?constraint_statement pq:P2241 []}
-  FILTER NOT EXISTS {?constraint_statement wikibase:rank wikibase:DeprecatedRank}
-  FILTER NOT EXISTS {?constraint_statement pq:P2303 ?subject1} 
-  FILTER NOT EXISTS {?constraint_statement pq:P2303 ?subject2} 
+  FILTER NOT EXISTS {?statement pq:P2241 []}
+  FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?statement pq:P2303 ?subject1} 
+  FILTER NOT EXISTS {?statement pq:P2303 ?subject2} 
 }
+
