@@ -27,7 +27,7 @@ The first step consists of downloading and preparing the resources to extract th
 
 Our experiments used two snapshots: 2019-06-19 and 2023-05-12; both were collected from the list available at [www.rdfhdt.org/datasets/](https://www.rdfhdt.org/datasets/), but the same procedure works for comparing any two HDT snapshots of Wikidata's latest-all dumps, available at [https://dumps.wikimedia.org/wikidatawiki/entities/](https://dumps.wikimedia.org/wikidatawiki/entities/).   
 
-Let's use the folder ``inconsistencies_collector/`` to store the snapshots:
+Let's use the folder ``scripts/inconsistencies_collector`` to store the snapshots:
 
 ```
 $ cd scripts/inconsistencies_collector
@@ -51,7 +51,7 @@ $ cd hdt-java-package
 $ mvn assembly:single
 ```
 
-Now you should be able to see the file ``~/inconsistencies_collector/hdt-java/hdt-jena/bin/hdtsparql.sh``.
+Now you should be able to see the file ``scripts/inconsistencies_collector/hdt-java/hdt-jena/bin/hdtsparql.sh``.
 
 You can test it by running a simple query, for instance:
 
@@ -62,7 +62,7 @@ $ sh hdt-java/hdt-jena/bin/hdtsparql.sh latest-all-19-Jun-2019.hdt "SELECT * {?S
 
 ## 1.3 Executing SPARQL queries to retrieve violations
 
-Once this is done, we can execute `hdtsparql.sh` to extract all the violations of a given snapshot for a given constraint type via a SPARQL query. All our SPARQL queries are available in the folder ``queries``. We will use the None-of constraint as an example:
+Once this is done, we can execute `hdtsparql.sh` to extract all the violations of a given snapshot for a given constraint type via a SPARQL query. All our SPARQL queries are available in the folder ``scripts/inconsistencies_collector/violation_queries``. We will use the None-of constraint as an example:
 
 ```
 $ hdt-java/hdt-jena/bin/hdtsparql.sh latest-all-19-Jun-2019.hdt "$(<violation_queries/none_of_violations_query.rq)" > none_of_violations_2019.txt &
@@ -78,7 +78,7 @@ this will then generate two files ``none_of_violations_2019.txt`` and ``none_of_
 # Step 2: Extracting repairs
 
 We are now ready to compare the violation sets and get the repairs, which are basically rows that appeared in 2019 and didn't appear in 2023. 
-On the folder ``repair_generator``, run:
+On the folder ``scripts/repair_generator``, run:
 
 ```
 python repair_finder_diff.py ../inconsistencies_collector/none_of_violations_2019.txt ../inconsistencies_collector/none_of_violations_2023.txt none_of_repairs.csv
@@ -126,9 +126,6 @@ $ python repair_constraints_collector.py
 
 or just unzip the already provided ``constraint.db.zip`` to have the list of changes from 2019-2023. T-box changes can now be extracted by executing the script ``t-box_repairs_analyzer.py``.
 This step tests: constraint deletion, deprecation of the constraint, and base statement subject added as an exception to the constraint. As well as getting some specific constraint qualifiers to be used later on.
-
-(TODO) Add Dayane's script description
-
 
 ## 3.2 A-box repairs and T-box specific
 
