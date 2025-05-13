@@ -9,20 +9,20 @@ PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
 SELECT
 ?subject
-?p_pid
-?obj_statement
-?pq_qualifier_must_be_used
+?PSQ
+?SQ
+?Q
 WHERE
 {
-  ?subject ?p_pid ?obj_statement.
-  FILTER NOT EXISTS {?obj_statement ?pq_qualifier_must_be_used []}
+  ?subject ?PSQ ?SQ.
+  FILTER NOT EXISTS {?SQ ?Q []}
   
-  [wikibase:claim ?p_pid] p:P2302 ?statement .
-  ?statement ps:P2302 wd:Q21510856 . ## required qualifier constraint
-  ?statement pq:P2306/wikibase:qualifier ?pq_qualifier_must_be_used.
+  [wikibase:claim ?PSQ] p:P2302 ?CQ .
+  ?CQ ps:P2302 wd:Q21510856 . ## required qualifier constraint
+  ?CQ pq:P2306/wikibase:qualifier ?Q.
   
   # exception and deprecation
-  FILTER NOT EXISTS {?statement pq:P2241 []}
-  FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
-  FILTER NOT EXISTS {?statement pq:P2303 ?subject}
-} #limit 1
+  FILTER NOT EXISTS {?CQ pq:P2241 []}
+  FILTER NOT EXISTS {?CQ wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?CQ pq:P2303 ?subject}
+}
