@@ -10,21 +10,25 @@ PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 SELECT
   ?subject
   ?wd_property
-  ?instance_statement
-  (?pq_qualifier as ?not_allowed_qualifier)
+  ?SQ
+  ?Q
 WHERE
 {
-  ?statement ps:P2302 wd:Q21510851. ## allowed qualifiers constraint
-  ?wd_property p:P2302 ?statement.
-  ?wd_property wikibase:claim ?p_property.
+  ?CQ ps:P2302 wd:Q21510851. ## allowed qualifiers constraints
+  ?wd_property p:P2302 ?CQ.
+  ?wd_property wikibase:claim ?PSQ.
   
-  ?subject ?p_property ?instance_statement.
-  ?instance_statement ?pq_qualifier [].
-  ?wd_qualifier wikibase:qualifier ?pq_qualifier.
-  FILTER NOT EXISTS {?statement pq:P2306 ?wd_qualifier}
+  ?subject ?PSQ ?SQ.
+  ?SQ ?Q [].
+  ?wd_qualifier wikibase:qualifier ?Q.
+  FILTER NOT EXISTS {?CQ pq:P2306 ?wd_qualifier}
    
-  
+  # exception and deprecation
+  FILTER NOT EXISTS {?CQ pq:P2241 []}
+  FILTER NOT EXISTS {?CQ wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?CQ pq:P2303 ?subject}
+
   # EXAMPLE (comment next line to query all violations for all properties of this type...)
   # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
-  #FILTER (?p_property = p:P210)
+  #FILTER (?PSQ = p:P210)
 }
