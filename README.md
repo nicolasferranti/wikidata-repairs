@@ -141,5 +141,3 @@ This step tests: constraint deletion, deprecation of the constraint, and base st
 ## 3.2 A-box repairs and T-box specific
 
 The output of step 3.1 can now be used as an input for the corresponding analyzer file available on ``repair_analyzer_notebooks/*_analyzer.ipynb`` which will test A-box repairs and T-box specific repairs.
-
-(TODO) Add more details
