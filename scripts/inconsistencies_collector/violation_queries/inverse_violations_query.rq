@@ -11,20 +11,20 @@ SELECT
 ?subject
 ?property
 ?object
-(?wdt_inverse as ?requested_property)
+?PC
 WHERE
 {
-  ?property wikibase:directClaim ?wdt_prop.
+  ?property wikibase:directClaim ?P.
   
-  ?property p:P2302 ?statement.
-  ?statement ps:P2302 wd:Q21510855. ## inverse constraint
-  ?statement pq:P2306/wikibase:directClaim ?wdt_inverse.
+  ?property p:P2302 ?CQ.
+  ?CQ ps:P2302 wd:Q21510855. ## inverse constraint
+  ?CQ pq:P2306/wikibase:directClaim ?PC.
   
-  ?subject ?wdt_prop ?object.
+  ?subject ?P ?object.
   
-  FILTER NOT EXISTS {?object ?wdt_inverse ?subject}
-  FILTER NOT EXISTS {?statement pq:P2303 ?subject}
-  FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
-  FILTER NOT EXISTS {?statement pq:P2241 []}
+  FILTER NOT EXISTS {?object ?PC ?subject}
+  FILTER NOT EXISTS {?CQ pq:P2303 ?subject}
+  FILTER NOT EXISTS {?CQ wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?CQ pq:P2241 []}
 
 }
