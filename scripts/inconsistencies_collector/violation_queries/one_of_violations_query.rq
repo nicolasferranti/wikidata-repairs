@@ -11,15 +11,15 @@ SELECT
 ?subject ?property ?object
 WHERE
 {
-  ?property wikibase:directClaim ?wdt_property.
-  ?property p:P2302 ?statement.
-  ?statement ps:P2302 wd:Q21510859. ## one-of
-  ?subject ?wdt_property ?object.
+  ?property wikibase:directClaim ?P.
+  ?property p:P2302 ?CQ.
+  ?CQ ps:P2302 wd:Q21510859. ## one-of
+  ?subject ?P ?object.
   
   # exception and deprecation
-  FILTER NOT EXISTS {?statement pq:P2241 []}
-  FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
-  FILTER NOT EXISTS {?statement pq:P2303 ?subject}
+  FILTER NOT EXISTS {?CQ pq:P2241 []}
+  FILTER NOT EXISTS {?CQ wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?CQ pq:P2303 ?subject}
   
-  FILTER NOT EXISTS {?statement pq:P2305 ?object.}
+  FILTER NOT EXISTS {?CQ pq:P2305 ?object.}
 }
