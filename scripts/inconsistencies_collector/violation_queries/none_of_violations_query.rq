@@ -7,17 +7,17 @@ PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT 
-?subject ?property ?disallowed_object
+?subject ?property ?V
 WHERE
 {
-  ?property wikibase:directClaim ?actualProperty.
-  ?property p:P2302 ?statement.
-  ?statement ps:P2302 wd:Q52558054. ## none-of
-  ?statement pq:P2305 ?disallowed_object.
-  ?subject ?actualProperty ?disallowed_object.
+  ?property wikibase:directClaim ?P.
+  ?property p:P2302 ?CQ.
+  ?CQ ps:P2302 wd:Q52558054. ## none-of
+  ?CQ pq:P2305 ?V.
+  ?subject ?P ?V.
   
   # exception and deprecation
-  FILTER NOT EXISTS {?statement pq:P2241 []}
-  FILTER NOT EXISTS {?statement wikibase:rank wikibase:DeprecatedRank}
-  FILTER NOT EXISTS {?statement pq:P2303 ?subject} 
+  FILTER NOT EXISTS {?CQ pq:P2241 []}
+  FILTER NOT EXISTS {?CQ wikibase:rank wikibase:DeprecatedRank}
+  FILTER NOT EXISTS {?CQ pq:P2303 ?subject} 
 }
